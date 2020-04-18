@@ -10,4 +10,4 @@ The new layout can be selected from the top bar of the Function Graph widget.
 Do not expect nothing special, it is a (probably broken) early release.
 
 ### Installation
-Download the realese zip, open Ghidra, click on `File/Install Extensions...` and select the zip.
+Go to release, download the zip, open Ghidra, click on `File/Install Extensions...` and select the zip.
