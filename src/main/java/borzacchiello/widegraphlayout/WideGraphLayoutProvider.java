@@ -39,7 +39,7 @@ public class WideGraphLayoutProvider extends FGLayoutProvider {
 
 	@Override
 	public int getPriorityLevel() {
-		return 500;  // lower than default visualization
+		return 500; // lower than default visualization
 	}
 
 	@Override
@@ -121,6 +121,9 @@ public class WideGraphLayoutProvider extends FGLayoutProvider {
 		private void assignRows(VisualGraph<FGVertex, FGEdge> g, FGVertex root) {
 			class Closure {
 				void run(FGVertex vertex, Set<FGVertex> path, int row) {
+					if (path.contains(vertex))
+						return;
+
 					Collection<FGVertex> successors = g.getSuccessors(vertex);
 
 					if (!row_to_nodes.containsKey(row))
@@ -129,24 +132,22 @@ public class WideGraphLayoutProvider extends FGLayoutProvider {
 					Node n;
 					if (vertex_to_node.containsKey(vertex)) {
 						n = vertex_to_node.get(vertex);
-						if (n.row < row && !path.contains(n.v)) {
+						if (n.row < row) {
 							List<Node> list_row = row_to_nodes.get(n.row);
 							boolean res = list_row.remove(n);
 							assert (res);
 							row_to_nodes.get(row).add(n);
 							n.row = row;
-						}
+						} else
+							return;
 					} else {
 						n = new Node(vertex, row, 0);
 						vertex_to_node.put(vertex, n);
 						row_to_nodes.get(row).add(n);
 					}
 
-					if (path.contains(n.v))
-						return;
-
 					for (FGVertex s : successors) {
-						HashSet<FGVertex> new_path = new HashSet<>(path);
+						Set<FGVertex> new_path = new HashSet<>(path);
 						new_path.add(vertex);
 						run(s, new_path, row + 1);
 					}
